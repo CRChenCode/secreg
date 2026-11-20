@@ -1,0 +1,45 @@
+# Project-specific: never commit large / generated / sensitive artifacts
+data/
+outputs/
+logs/
+*.safetensors
+*.pt
+*.pth
+*.npy
+*.npz
+*.parquet
+*.jsonl.gz
+
+# Allow small, explicitly-curated task files and figures to be committed
+!data/tasks/*.jsonl
+!data/tasks/LICENSES.md
+!docs/results/**/*.png
+!docs/results/**/*.svg
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.venv/
+venv/
+.uv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+build/
+dist/
+
+# Secrets / env
+.env
+*.pem
+*.key
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Jupyter
+.ipynb_checkpoints/

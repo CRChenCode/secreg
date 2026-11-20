@@ -1,0 +1,56 @@
+# Phase 1 output. Every model ID below was verified to exist on Hugging Face
+# (checked 2026-11-20; see docs/results/phase1.md for throughput/memory numbers
+# once the smoke test runs).
+schema_version: "1.0"
+
+models:
+  primary:
+    role: "Primary (white-box, MoE)"
+    hf_id: "Qwen/Qwen3-Coder-30B-A3B-Instruct"
+    params_total: "30.5B"
+    params_active: "3.3B"
+    architecture: "MoE (128 experts, 8 active/token)"
+    license: "Apache-2.0"
+    context_length: 262144
+    dtype: "bf16"
+    gpu: "h100-NVL"   # preferred per PLAN.md; h200 as large-batch alt, h100/a100 as backup
+    notes: "Non-thinking mode only. Agentic/coding-optimized."
+
+  pilot_mini_coder:
+    role: "Pilot"
+    hf_id: "ricdomolm/mini-coder-4b"
+    params_total: "4B"
+    architecture: "dense (distilled from Qwen3-Coder-30B-A3B)"
+    license: "MIT"
+    dtype: "bf16"
+    gpu: "l40s"
+    notes: "Trained on mini-swe-agent trajectories (SWE-smith). Good agent-format pilot match."
+
+  pilot_qwen3_4b:
+    role: "Pilot"
+    hf_id: "Qwen/Qwen3-4B-Instruct-2507"
+    params_total: "4.0B"
+    params_non_embedding: "3.6B"
+    architecture: "dense"
+    license: "Apache-2.0"
+    context_length: 262144
+    dtype: "bf16"
+    gpu: "l40s"
+    notes: "Non-thinking mode only (the -2507 instruct release)."
+
+  secondary_qwen3_8b:
+    role: "Pilot (candidate secondary white-box, dense)"
+    hf_id: "Qwen/Qwen3-8B"
+    params_total: "8B"
+    architecture: "dense; hybrid thinking/non-thinking"
+    license: "Apache-2.0"
+    dtype: "bf16"
+    gpu: "l40s / a100"
+    notes: >
+      Report thinking and non-thinking modes separately (Phase 3 task 2).
+      Candidate for promotion to secondary white-box model at GATE 3 (MoE-vs-dense
+      comparison) — if promoted, note in the write-up that both white-box models
+      are from the Qwen family.
+
+# Chat-template notes: all four models ship their own tokenizer/chat_template.json
+# on the Hub; do not hand-roll templates — use `tokenizer.apply_chat_template`.

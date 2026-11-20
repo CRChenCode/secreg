@@ -1,0 +1,63 @@
+# Phase 0 output — JHU ARCH Skipjack cluster facts.
+# Status: PARTIAL. GPU test job (Phase 0 task 3) could not complete because the
+# cluster is experiencing a wide node outage at recon time (see docs/cluster.md).
+# Fields marked "UNVERIFIED (outage)" must be re-checked once nodes recover, before GATE 0 is closed.
+
+schema_version: "1.0"
+recon_date: "2026-11-20"
+
+login:
+  host: login.arch.jhu.edu
+  user: cchen343
+
+slurm:
+  account: yyao69_super
+  qos: jhu              # MaxTRESPU = gres/gpu=16 (cluster-wide cap for this account/QOS)
+  gpu_request_syntax: "--gres=gpu:<n>"   # confirmed from sbatch header accepted by scheduler (job 1987143 parsed OK: TresPerNode=gres/gpu:1); --gpus not tested
+  scratch_root: /scratch/jhu/yyao69/cchen343/secreg
+  home_root: /home/jhu/cchen343          # mounted as /weka/home/jhu/cchen343 (94G total, 11G used, 83G avail — shared weka fs, not per-user quota)
+
+partitions:
+  # node-type name -> SLURM partition name (identical on this cluster) + gres string + node count
+  l40s:        {partition: l40s,        gres: "gpu:l40s:8",            nodes: 8,  state_at_recon: "down* (Not responding)"}
+  a100:        {partition: a100,        gres: "gpu:a100:8",            nodes: 13, state_at_recon: "down* (Not responding)"}
+  h100:        {partition: h100,        gres: "gpu:h100:4",            nodes: 32, state_at_recon: "down* (Not responding)"}
+  h200:        {partition: h200,        gres: "gpu:h200:4",            nodes: 6,  state_at_recon: "down* (Not responding)"}
+  rtx6000:     {partition: rtx6000,     gres: "gpu:rtx_pro_6000:4-8",  nodes: 3,  state_at_recon: "down* (Not responding)"}
+  b200:        {partition: b200,        gres: "gpu:b200:8",            nodes: 16, state_at_recon: "down* (Not responding)"}
+  b300:        {partition: b300,        gres: "gpu:b300:8",            nodes: 17, state_at_recon: "down* (Not responding)"}
+  interactive_gpu: {partition: interactive_gpu, gres: "gpu:2g.20gb:24", nodes: 2, state_at_recon: "down* (Not responding)", timelimit: "4:00:00"}
+  interactive_cpu: {partition: interactive_cpu, gres: null, nodes: 3,  timelimit: "4:00:00"}
+  med:         {partition: med,  gres: null, nodes: 74, timelimit: "3-00:00:00"}
+  low:         {partition: low,  gres: null, nodes: 436, note: "partition AVAIL=inact; 4 nodes observed idle despite that"}
+
+timelimits:
+  gpu_partitions_default: "3-00:00:00"
+  interactive_partitions: "4:00:00"
+  agentic: "7-00:00:00"
+
+sandbox:
+  apptainer_available: false     # `module spider apptainer` / `singularity`: not found anywhere in Lmod tree
+  unshare_available: true        # /usr/bin/unshare present on login node; `unshare -rn true` itself UNVERIFIED (outage) on a compute node
+  chosen_backend: "subprocess+unshare"   # only viable option until apptainer is confirmed absent on compute nodes too
+
+internet_access:
+  login_node: true                # huggingface.co -> 200, pypi.org -> 200 (checked from login03)
+  compute_node: "UNVERIFIED (outage)"   # could not run curl from a compute node; all GPU partitions down at recon time
+
+env_modules:
+  python: ["3.8.6", "3.9.15", "3.11.9", "3.13.13"]
+  uv: "not found as a module; install via pip --user or the official installer script (needs compute/login-node internet, confirmed on login)"
+  conda_fallback: "anaconda3/2024.02-1 (Spack module, experimental tag)"
+  gcc_toolchain: "gcc/12.3.0 (default, large software tree)"
+
+storage:
+  home: {path: /home/jhu/cchen343, size: "94G (shared weka fs)", used: "11G"}
+  scratch_pi: {path: /scratch/jhu/yyao69, note: "PI top-level dir exists, owned by yyao69; group yyao69"}
+  scratch_project: {path: /scratch/jhu/yyao69/cchen343/secreg, created: true, created_at: "2026-11-20"}
+  scratch_fs_total: "4.5P, 396T used cluster-wide, 9% utilization"
+
+open_items:
+  - "Re-run Phase 0 task 3 (GPU test job, job id 1987143 on l40s, submitted 2026-11-20T14:53:16) once nodes recover: confirm nvidia-smi, compute-node internet, /tmp and $TMPDIR size, unshare -rn, apptainer absence."
+  - "Confirm whether --gpus (as opposed to --gres=gpu:N) is also accepted; only --gres tested so far."
+  - "Resolve PI account/group ambiguity: scratch PI dir /scratch/jhu/yyao69 is owned by user+group 'yyao69', separate from SLURM account 'yyao69_super' — both appear to map to the same PI (yyao69), kept as-is."

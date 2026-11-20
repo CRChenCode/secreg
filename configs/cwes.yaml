@@ -1,0 +1,20 @@
+# Phase 2 output (Alfonso-owned, see PLAN.md Phase 2 / PLAN_alfonso.md H1).
+# Per-CWE task templates, constraint text, and oracle config go here once the
+# CWE selection and task import/re-validation/extension work is done.
+#
+# Not populated yet: this file is a structural placeholder only. Do not treat
+# the keys below as decided — they are the *default candidates* listed in
+# PLAN.md Phase 2, pending the GATE 2 selection (>=15 re-validated tasks/CWE,
+# dynamic security tests, >=20% novel).
+schema_version: "1.0"
+candidate_cwes:
+  - cwe: "CWE-89"
+    name: "SQL injection"
+  - cwe: "CWE-22"
+    name: "Path traversal"
+  - cwe: "CWE-78"
+    name: "OS command injection"
+  - cwe: "CWE-798"
+    name: "Hard-coded credentials"
+    note: "include only if a dynamic oracle is feasible"
+selected_cwes: []  # filled at GATE 2

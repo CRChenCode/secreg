@@ -1,0 +1,18 @@
+# Phase 5 output (Alfonso-owned, see PLAN.md Phase 5 / PLAN_alfonso.md H3).
+# Fork-condition definitions consumed by src/secreg/gen/forks.py::make_forks.
+# Structural placeholder only — not populated until Phase 5 / GATE 5.
+schema_version: "1.0"
+conditions:
+  - name: control
+  - name: ctx_loss_delete
+  - name: ctx_loss_summary
+  - name: ctx_loss_distance
+    variants: [1000, 2000, 4000]  # token counts
+  - name: ctx_loss_no_code
+  - name: goal_comp
+    variants: [1, 2, 3]  # cost levels
+  - name: insecure_ref
+    variants:
+      similarity: [high, low]
+      location: [same_file, other_file]
+      naming: [neutral, legacy_]
