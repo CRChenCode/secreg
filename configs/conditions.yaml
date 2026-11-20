@@ -1,18 +1,28 @@
-# Phase 5 output (Alfonso-owned, see PLAN.md Phase 5 / PLAN_alfonso.md H3).
-# Fork-condition definitions consumed by src/secreg/gen/forks.py::make_forks.
+# Phase 5 output (Alfonso-owned, see PLAN.md v2 Phase 5 / PLAN_alfonso.md v2 H3).
 # Structural placeholder only — not populated until Phase 5 / GATE 5.
-schema_version: "1.0"
-conditions:
-  - name: control
-  - name: ctx_loss_delete
-  - name: ctx_loss_summary
-  - name: ctx_loss_distance
-    variants: [1000, 2000, 4000]  # token counts
-  - name: ctx_loss_no_code
+# v2 renames factors and splits them into pilot vs. secondary (full-run) tiers;
+# `control` is now the implicit baseline every other factor is matched against,
+# not a factor name consumed by make_contrasts.
+schema_version: "2.0"
+
+pilot_factors:
   - name: goal_comp
-    variants: [1, 2, 3]  # cost levels
+    variants: [1, 2, 3]  # calibrated cost levels; see tasks.jsonl goal_comp_validation
   - name: insecure_ref
     variants:
       similarity: [high, low]
       location: [same_file, other_file]
-      naming: [neutral, legacy_]
+      naming: [neutral, "legacy_"]
+  - name: ctx_omit
+    note: "history summary omits the explicit security constraint; matched control is an equal-style summary retaining it"
+
+secondary_factors:  # full run only, after pilot go/no-go
+  - name: ctx_delete
+    note: "deletes the constraint user turn while keeping the secure code already written"
+  - name: ctx_distance
+    variants: [1000, 2000, 4000]  # tokens of neutral filler inserted after the constraint
+  - name: implicit_only
+    note: "constraint text omitted but secure implementation remains; tests invariant continuation without explicit instruction"
+
+# Every fork (manipulated or control) carries a `contrast_id` pairing it with
+# its `matched_control_fork_id`; see src/secreg/schemas.py::Fork.

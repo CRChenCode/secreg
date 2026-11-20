@@ -1,11 +1,13 @@
-"""Direction construction and steering (PLAN.md Phase 10, Phase 11).
+"""Direction construction and steering (PLAN.md v2 Phase 10 direction interventions, Phase 11).
 
-Owner: GPU owner, using Phase 9 probe directions (H7) or diff-of-means. Not
-implemented yet; awaiting H7.
+Owner: GPU owner, using H7 v2 probe/diff-of-means directions (constraint-
+related, insecure-source-related, and random/control directions). Avoid
+selecting the intervention layer on the untouched test split. Not
+implemented yet; awaiting H7 v2.
 """
 
 from __future__ import annotations
 
 
-def steer(activations: dict, direction: list[float], alpha: float, layer: int) -> dict:
-    raise NotImplementedError("secreg.analysis.steering: awaiting H7 (PLAN.md Phase 10/11).")
+def steer(state: dict, direction_source: str, layer: int, strength: float) -> dict:
+    raise NotImplementedError("secreg.analysis.steering: awaiting H7 v2 (PLAN.md v2 Phase 10/11).")

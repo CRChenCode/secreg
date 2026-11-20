@@ -1,11 +1,17 @@
 """Build and read MANIFEST.json for handoff folders and output directories.
 
-Format (PLAN_alfonso.md section 3.1):
+v2 format (PLAN_alfonso.md v2 section 3.2) adds `model`, `decoding`,
+`oracle_test_version`, `split_version`, `env`, and `provenance` on top of the
+base fields:
 {
-  "handoff_id": "...", "producer": "gpu-owner" | "alfonso", "consumer": "...",
-  "created_at": "...", "git_commit": "...", "config_hash": "...",
-  "schema_version": "...", "files": [{"path", "records", "sha256"}], "notes": "..."
+  "handoff_id": "...", "schema_version": "2.0", "producer": "gpu-owner" | "alfonso",
+  "consumer": "...", "created_at": "...", "git_commit": "...", "config_hash": "...",
+  "model": {...}, "decoding": {...}, "oracle_test_version": "...",
+  "split_version": "...", "env": {...}, "provenance": {...},
+  "files": [{"path", "records", "sha256"}], "notes": "..."
 }
+A `schema_version` that is not `2.x` should be treated as incompatible by
+consumers, never auto-upgraded (PLAN_alfonso.md v2 section 3.3 rule 3).
 """
 
 from __future__ import annotations
@@ -48,6 +54,12 @@ def build_manifest(
     config_hash: str = "",
     notes: str = "",
     file_glob: str = "**/*",
+    model: dict | None = None,
+    decoding: dict | None = None,
+    oracle_test_version: str | None = None,
+    split_version: str | None = None,
+    env: dict | None = None,
+    provenance: dict | None = None,
 ) -> dict:
     directory = Path(directory)
     files = []
@@ -69,6 +81,12 @@ def build_manifest(
         "git_commit": _git_commit(),
         "config_hash": config_hash,
         "schema_version": schema_version,
+        "model": model,
+        "decoding": decoding,
+        "oracle_test_version": oracle_test_version,
+        "split_version": split_version,
+        "env": env,
+        "provenance": provenance,
         "files": files,
         "notes": notes,
     }

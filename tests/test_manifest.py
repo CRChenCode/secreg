@@ -6,10 +6,10 @@ def test_build_and_verify_handoff(tmp_path):
     (tmp_path / "shard-0000.jsonl").write_text('{"a": 1}\n{"a": 2}\n')
     build_manifest(
         tmp_path,
-        handoff_id="H-test-v1",
+        handoff_id="H-test-v2",
         producer="gpu-owner",
         consumer="alfonso",
-        schema_version="1.0",
+        schema_version="2.0",
     )
     manifest = read_manifest(tmp_path)
     assert manifest["files"][0]["records"] == 2
@@ -20,10 +20,10 @@ def test_verify_handoff_detects_tamper(tmp_path):
     (tmp_path / "shard-0000.jsonl").write_text('{"a": 1}\n')
     build_manifest(
         tmp_path,
-        handoff_id="H-test-v1",
+        handoff_id="H-test-v2",
         producer="gpu-owner",
         consumer="alfonso",
-        schema_version="1.0",
+        schema_version="2.0",
     )
     (tmp_path / "shard-0000.jsonl").write_text('{"a": 999}\n')
     problems = verify_handoff(tmp_path)

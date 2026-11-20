@@ -1,20 +1,21 @@
-# Phase 2 output (Alfonso-owned, see PLAN.md Phase 2 / PLAN_alfonso.md H1).
-# Per-CWE task templates, constraint text, and oracle config go here once the
-# CWE selection and task import/re-validation/extension work is done.
-#
-# Not populated yet: this file is a structural placeholder only. Do not treat
-# the keys below as decided — they are the *default candidates* listed in
-# PLAN.md Phase 2, pending the GATE 2 selection (>=15 re-validated tasks/CWE,
-# dynamic security tests, >=20% novel).
-schema_version: "1.0"
-candidate_cwes:
+# Phase 2 output (Alfonso-owned, see PLAN.md v2 Phase 2 / PLAN_alfonso.md v2 H1).
+# Structural placeholder only — not populated until GATE 2.
+# v2 narrows the feasibility pilot to exactly 2 CWEs; the full run's wider set
+# is unchanged in spirit but is now explicitly "contingent on pilot go/no-go"
+# (PLAN.md v2 §0 scope and stage gates), not a default to build toward directly.
+schema_version: "2.0"
+
+pilot_cwes:  # 5-10 validated tasks each, GATE 2
   - cwe: "CWE-89"
     name: "SQL injection"
   - cwe: "CWE-22"
     name: "Path traversal"
+
+full_run_candidate_cwes:  # contingent on pilot go/no-go (PLAN.md v2 §0); >=15 tasks/CWE, >=20% novel where feasible
   - cwe: "CWE-78"
     name: "OS command injection"
   - cwe: "CWE-798"
     name: "Hard-coded credentials"
     note: "include only if a dynamic oracle is feasible"
+
 selected_cwes: []  # filled at GATE 2
